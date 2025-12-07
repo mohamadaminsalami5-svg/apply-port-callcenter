@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>ApplyPort Call Center CRM</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f3f4f6;
+      color: #111827;
+      direction: rtl;
+    }
+    header {
+      background: linear-gradient(135deg, #0f766e, #0369a1);
+      color: white;
+      padding: 16px 24px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.4);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+    header p {
+      margin: 4px 0 0;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    main {
+      padding: 16px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .layout {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+      padding: 16px;
+    }
+    .card h2 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card h2 span.emoji {
+      font-size: 1.2rem;
+    }
+    .column {
+      flex: 1 1 320px;
+      min-width: 0;
+    }
+    label {
+      font-size: 0.85rem;
+      margin-bottom: 4px;
+      display: block;
+      color: #374151;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 8px 10px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      font-size: 0.9rem;
+      outline: none;
+      background: #f9fafb;
+      transition: border 0.15s, box-shadow 0.15s, background 0.15s;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: #0ea5e9;
+      box-shadow: 0 0 0 1px rgba(14, 165, 233, 0.4);
+      background: white;
+    }
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+    button {
+      border-radius: 999px;
+      border: none;
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.08s, box-shadow 0.12s, background 0.12s;
+      white-space: nowrap;
+    }
+    button.primary {
+      background: linear-gradient(135deg, #0ea5e9, #0f766e);
+      color: white;
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);
+    }
+    button.primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.24);
+    }
+    button.outline {
+      background: white;
+      color: #0f172a;
+      border: 1px solid #d1d5db;
+    }
+    button.outline:hover {
+      background: #f9fafb;
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: default;
+      transform: none;
+      box-shadow: none;
+    }
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 0.85rem;
+    }
+    th, td {
+      padding: 8px 6px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: center;
+    }
+    th {
+      background: #f3f4f6;
+      font-weight: 600;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    .badge {
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 0.75rem;
+      display: inline-block;
+    }
+    .badge.wait {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    .badge.incall {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+    .badge.done {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .subtle {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-top: 2px;
+      margin-bottom: 8px;
+    }
+    .pill {
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      padding: 2px 10px;
+      font-size: 0.75rem;
+      display: inline-block;
+    }
+    .field-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .field-row > div {
+      flex: 1 1 120px;
+      min-width: 0;
+    }
+    .muted-box {
+      background: #f9fafb;
+      border-radius: 10px;
+      padding: 8px 10px;
+      border: 1px dashed #e5e7eb;
+      font-size: 0.8rem;
+      color: #4b5563;
+      margin-bottom: 10px;
+    }
+    .muted-box span.label {
+      font-weight: 600;
+    }
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+      display: inline-block;
+      margin-left: 4px;
+    }
+    .toast {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #111827;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.4);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 50;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, -6px);
+      pointer-events: auto;
+    }
+    @media (max-width: 768px) {
+      header {
+        padding: 12px 16px;
+      }
+      main {
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ApplyPort Call Center CRM</h1>
+    <p>ثبت ساده تماس‌ها و ارسال مستقیم اطلاعات دانشجو به Google Sheets</p>
+  </header>
+
+  <main>
+    <div class="layout">
+      <!-- ستون صف تماس‌ها -->
+      <section class="card column">
+        <h2><span class="emoji">📞</span> صف تماس‌ها</h2>
+        <p class="subtle">شماره‌ها را اینجا وارد کن، بعد یکی‌یکی تماس بگیر و فرم سمت راست را پر کن.</p>
+
+        <div class="field-row">
+          <div>
+            <label>نام و نام خانوادگی</label>
+            <input id="name" placeholder="مثلاً: علی رضایی" />
+          </div>
+          <div>
+            <label>شماره تماس / واتساپ</label>
+            <input id="phone" placeholder="مثلاً: 9053..." />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div>
+            <label>منبع ورودی</label>
+            <select id="source">
+              <option value="">انتخاب منبع...</option>
+              <option>Instagram</option>
+              <option>Google</option>
+              <option>Referral</option>
+              <option>Agent</option>
+              <option>Website</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div style="display:flex;align-items:flex-end;justify-content:flex-end;">
+            <button class="primary" onclick="addLead()">
+              ➕ افزودن به صف
+            </button>
+          </div>
+        </div>
+
+        <div class="status-bar">
+          <span><span class="status-dot"></span>متصل به Google Script (سمت سایت)</span>
+          <span id="queueCount">۰ مورد در صف</span>
+        </div>
+
+        <table id="leadsTable">
+          <thead>
+            <tr>
+              <th>نام</th>
+              <th>شماره</th>
+              <th>منبع</th>
+              <th>وضعیت</th>
+              <th>عملیات</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- ردیف‌ها اینجا اضافه می‌شوند -->
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ستون فرم تماس -->
+      <section class="card column">
+        <h2><span class="emoji">📝</span> فرم ثبت نتیجه تماس</h2>
+        <p class="subtle">بعد از شروع تماس روی یک دانشجو، این فرم را پر کن و روی «ذخیره تماس» بزن.</p>
+
+        <div id="noLeadSelected" class="muted-box">
+          هیچ دانشجویی انتخاب نشده است. از ستون سمت چپ روی دکمه <span class="pill">شروع تماس</span> بزن.
+        </div>
+
+        <div id="callForm" style="display:none;">
+          <div class="muted-box">
+            <div><span class="label">دانشجو:</span> <span id="studentNameLabel">-</span></div>
+            <div><span class="label">شماره:</span> <span id="studentPhoneLabel">-</span></div>
+            <div><span class="label">منبع:</span> <span id="studentSourceLabel">-</span></div>
+          </div>
+
+          <div class="field-row">
+            <div>
+              <label>سن</label>
+              <input id="age" placeholder="مثلاً ۲۰" />
+            </div>
+            <div>
+              <label>مقطع مورد نظر</label>
+              <select id="level">
+                <option value="">انتخاب...</option>
+                <option>Associate</option>
+                <option>Bachelor</option>
+                <option>Master</option>
+                <option>PhD</option>
+              </select>
+            </div>
+          </div>
+
+          <label>رشته مورد نظر</label>
+          <input id="major" placeholder="مثلاً: Management, Computer Science" />
+
+          <label>دانشگاه مدنظر یا پیشنهاد شده</label>
+          <input id="university" placeholder="مثلاً: Istanbul Arel, Nişantaşı, Medipol" />
+
+          <label>بودجه دانشجو (دلار در سال)</label>
+          <input id="budget" placeholder="مثلاً: 3000" />
+
+          <div class="field-row">
+            <div>
+              <label>نتیجه تماس</label>
+              <select id="callResult">
+                <option value="">انتخاب نتیجه...</option>
+                <option>Interested</option>
+                <option>Not Interested</option>
+                <option>Follow-up Tomorrow</option>
+                <option>Visit Office</option>
+                <option>Missing Documents</option>
+                <option>Wrong Number</option>
+              </select>
+            </div>
+          </div>
+
+          <label>توضیحات اپراتور</label>
+          <textarea id="notes" placeholder="مثلاً: دنبال بورسیه ۵۰٪ است، بودجه محدود، دانشگاه‌های پیشنهادی: ..."></textarea>
+
+          <div class="btn-row">
+            <button class="primary" id="saveBtn" onclick="saveCall()">
+              ✅ ذخیره تماس و ارسال به Google Sheets
+            </button>
+            <button class="outline" type="button" onclick="cancelSelection()">
+              لغو انتخاب
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    let leads = [];
+    let currentIndex = null;
+
+    // آدرس Web App که خودت دادی
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby6iFL3Gk6lrMNG_idU_hwPQFvVODygSSYir57_JlQ6V43AucWpwQpll5JhF-8Z9Y7POA/exec";
+
+    const leadsTableBody = document.querySelector("#leadsTable tbody");
+    const queueCountEl = document.getElementById("queueCount");
+    const callForm = document.getElementById("callForm");
+    const noLeadSelected = document.getElementById("noLeadSelected");
+
+    const studentNameLabel = document.getElementById("studentNameLabel");
+    const studentPhoneLabel = document.getElementById("studentPhoneLabel");
+    const studentSourceLabel = document.getElementById("studentSourceLabel");
+
+    const ageInput = document.getElementById("age");
+    const levelSelect = document.getElementById("level");
+    const majorInput = document.getElementById("major");
+    const universityInput = document.getElementById("university");
+    const budgetInput = document.getElementById("budget");
+    const callResultSelect = document.getElementById("callResult");
+    const notesInput = document.getElementById("notes");
+    const saveBtn = document.getElementById("saveBtn");
+    const toastEl = document.getElementById("toast");
+
+    function showToast(message) {
+      toastEl.textContent = message;
+      toastEl.classList.add("show");
+      setTimeout(() => {
+        toastEl.classList.remove("show");
+      }, 2200);
+    }
+
+    function updateQueueCount() {
+      queueCountEl.textContent = leads.length
+        ? leads.length + " مورد در صف"
+        : "۰ مورد در صف";
+    }
+
+    function renderTable() {
+      leadsTableBody.innerHTML = "";
+      leads.forEach((lead, index) => {
+        const tr = document.createElement("tr");
+
+        const nameTd = document.createElement("td");
+        nameTd.textContent = lead.name || "-";
+
+        const phoneTd = document.createElement("td");
+        phoneTd.textContent = lead.phone || "-";
+
+        const sourceTd = document.createElement("td");
+        sourceTd.textContent = lead.source || "-";
+
+        const statusTd = document.createElement("td");
+        const badge = document.createElement("span");
+        badge.classList.add("badge");
+        if (lead.status === "in-call") {
+          badge.classList.add("incall");
+          badge.textContent = "در حال تماس";
+        } else if (lead.status === "done") {
+          badge.classList.add("done");
+          badge.textContent = "ثبت شد";
+        } else {
+          badge.classList.add("wait");
+          badge.textContent = "در انتظار تماس";
+        }
+        statusTd.appendChild(badge);
+
+        const actionTd = document.createElement("td");
+        const btn = document.createElement("button");
+        btn.classList.add("outline");
+        btn.textContent = lead.status === "done" ? "مشاهده" : "شروع تماس";
+        btn.onclick = () => openCall(index);
+        actionTd.appendChild(btn);
+
+        tr.appendChild(nameTd);
+        tr.appendChild(phoneTd);
+        tr.appendChild(sourceTd);
+        tr.appendChild(statusTd);
+        tr.appendChild(actionTd);
+
+        leadsTableBody.appendChild(tr);
+      });
+
+      updateQueueCount();
+    }
+
+    function addLead() {
+      const nameInput = document.getElementById("name");
+      const phoneInput = document.getElementById("phone");
+      const sourceSelect = document.getElementById("source");
+
+      const name = (nameInput.value || "").trim();
+      const phone = (phoneInput.value || "").trim();
+      const source = sourceSelect.value;
+
+      if (!name || !phone) {
+        showToast("نام و شماره ضروری است.");
+        return;
+      }
+
+      leads.push({
+        name,
+        phone,
+        source,
+        status: "wait"
+      });
+
+      nameInput.value = "";
+      phoneInput.value = "";
+      sourceSelect.value = "";
+
+      renderTable();
+      showToast("به صف تماس اضافه شد.");
+    }
+
+    function openCall(index) {
+      const lead = leads[index];
+      currentIndex = index;
+
+      leads.forEach((l, i) => {
+        if (l.status !== "done") {
+          l.status = i === index ? "in-call" : "wait";
+        }
+      });
+
+      studentNameLabel.textContent = lead.name || "-";
+      studentPhoneLabel.textContent = lead.phone || "-";
+      studentSourceLabel.textContent = lead.source || "-";
+
+      ageInput.value = "";
+      levelSelect.value = "";
+      majorInput.value = "";
+      universityInput.value = "";
+      budgetInput.value = "";
+      callResultSelect.value = "";
+      notesInput.value = "";
+
+      noLeadSelected.style.display = "none";
+      callForm.style.display = "block";
+
+      renderTable();
+    }
+
+    function cancelSelection() {
+      currentIndex = null;
+      leads.forEach(l => {
+        if (l.status !== "done") l.status = "wait";
+      });
+      callForm.style.display = "none";
+      noLeadSelected.style.display = "block";
+      renderTable();
+    }
+
+    function saveCall() {
+      if (currentIndex === null) {
+        showToast("هیچ دانشجویی انتخاب نشده است.");
+        return;
+      }
+
+      const lead = leads[currentIndex];
+
+      const payload = {
+        name: lead.name,
+        phone: lead.phone,
+        source: lead.source,
+        age: ageInput.value.trim(),
+        level: levelSelect.value,
+        major: majorInput.value.trim(),
+        university: universityInput.value.trim(),
+        budget: budgetInput.value.trim(),
+        result: callResultSelect.value,
+        notes: notesInput.value.trim()
+      };
+
+      if (!payload.result) {
+        showToast("نتیجه تماس را انتخاب کن.");
+        return;
+      }
+
+      saveBtn.disabled = true;
+      saveBtn.textContent = "در حال ارسال...";
+
+      fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify(payload)
+      }).catch(err => {
+        console.error("Error sending data to Google Script", err);
+      }).finally(() => {
+        saveBtn.disabled = false;
+        saveBtn.textContent = "✅ ذخیره تماس و ارسال به Google Sheets";
+      });
+
+      lead.status = "done";
+      renderTable();
+      showToast("تماس ثبت شد و به شیت ارسال شد.");
+      cancelSelection();
+    }
+
+    renderTable();
+  </script>
+</body>
+</html>
